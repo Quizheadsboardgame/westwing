@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE WEST WING</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #question, #answer {
+            margin: 10px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            width: 400px;
+            text-align: center;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+        .fadeIn {
+            opacity: 1;
+        }
+        .fadeOut {
+            opacity: 0;
+        }
+        #next-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>THE WEST WING</h1>
+<div id="question" class="fadeIn"></div>
+<div id="answer" class="fadeIn"></div>
+<button id="next-button" onclick="nextQuestion()">Next</button>
+
+<script>
+    const quizData = [
+        { question: "What is the name of the President in The West Wing?", answer: "Josiah Bartlet." },
+        { question: "Who portrays President Bartlet?", answer: "Martin Sheen." },
+        { question: "What is the profession of Josh Lyman?", answer: "Deputy Chief of Staff." },
+        { question: "Who plays the character of Josh Lyman?", answer: "Bradley Whitford." },
+        { question: "What is the name of the White House Chief of Staff?", answer: "Leo McGarry." },
+        { question: "Who plays Leo McGarry?", answer: "John Spencer." },
+        { question: "What position does C.J. Cregg hold in the Bartlet administration?", answer: "Press Secretary." },
+        { question: "Who portrays C.J. Cregg?", answer: "Allison Janney." },
+        { question: "What is the name of the First Lady in The West Wing?", answer: "Abbey Bartlet." },
+        { question: "Who plays Abbey Bartlet?", answer: "Stockard Channing." },
+        { question: "What is the name of the character played by Janel Moloney?", answer: "Donna Moss." },
+        { question: "Who serves as the White House Communications Director?", answer: "Toby Ziegler." },
+        { question: "Who portrays Toby Ziegler?", answer: "Richard Schiff." },
+        { question: "What is the fictional political party of President Bartlet?", answer: "Democratic Party." },
+        { question: "What key issue does the series often address?", answer: "American politics and governance." },
+        { question: "In what year did The West Wing first premiere?", answer: "1999." },
+        { question: "Who created The West Wing?", answer: "Aaron Sorkin." },
+        { question: "What is the name of the episode where President Bartlet announces his re-election campaign?", answer: "\"Election Night.\"" },
+        { question: "What illness does President Bartlet secretly suffer from?", answer: "Multiple Sclerosis." },
+        { question: "What is the name of the speechwriter character who often clashes with C.J.?", answer: "Toby Ziegler." },
+        { question: "Who is the character known for his knowledge of constitutional law?", answer: "Sam Seaborn." },
+        { question: "Who plays Sam Seaborn?", answer: "Rob Lowe." },
+        { question: "Which character often serves as the moral compass of the show?", answer: "Leo McGarry." },
+        { question: "What is the title of the series finale of The West Wing?", answer: "\"Tomorrow.\"" },
+        { question: "What significant event occurs in the final season regarding President Bartlet?", answer: "He completes his second term." },
+        { question: "Who becomes the President after Bartlet?", answer: "Matt Santos." },
+        { question: "What character is portrayed by Jimmy Smits?", answer: "Matt Santos." },
+        { question: "What major political issue does the show address in Season 4?", answer: "Gun control." },
+        { question: "Who is the character known for her strong feminist views?", answer: "C.J. Cregg." },
+        { question: "What event is depicted in the episode titled \"Two Cathedrals\"?", answer: "The funeral of Mrs. Landingham." },
+        { question: "What is the name of the fictional Vice President in The West Wing?", answer: "John Hoynes." },
+        { question: "Who plays John Hoynes?", answer: "Tim Matheson." },
+        { question: "What is the main setting of The West Wing?", answer: "The White House." },
+        { question: "Which character often uses sports analogies?", answer: "Josh Lyman." },
+        { question: "What is the title of the first episode of The West Wing?", answer: "\"What Kind of Day Has It Been.\"" },
+        { question: "Who frequently butts heads with Toby Ziegler?", answer: "Josh Lyman." },
+        { question: "What is the name of the character who serves as the Deputy Chief of Staff?", answer: "Josh Lyman." },
+        { question: "Which character is portrayed by Dule Hill?", answer: "Charlie Young." },
+        { question: "What role does Charlie Young hold in the White House?", answer: "Personal aide to the President." },
+        { question: "What significant speech does President Bartlet give in \"Two Cathedrals\"?", answer: "His speech to God." },
+        { question: "Which character often says, \"What the hell?\"", answer: "Toby Ziegler." },
+        { question: "What is the name of the First Daughter in The West Wing?", answer: "Zoey Bartlet." },
+        { question: "Who plays Zoey Bartlet?", answer: "Elisabeth Moss." },
+        { question: "What is the name of the character who is a famous television journalist?", answer: "Helen Thomas (portrayed by herself)." },
+        { question: "What issue is at the center of the episode \"The Leadership Breakfast\"?", answer: "Bipartisanship in politics." },
+        { question: "What is the title of the episode where the Bartlet administration faces a crisis in the Middle East?", answer: "\"The Long Goodbye.\"" },
+        { question: "Who is the character known for his catchphrase \"I can't help you\"?", answer: "Sam Seaborn." },
+        { question: "What major national event occurs in the series finale?", answer: "The inauguration of President Santos." },
+        { question: "Which character has a storyline involving a speechwriting competition?", answer: "Sam Seaborn." },
+        { question: "What is the main theme of The West Wing?", answer: "Idealism in politics." },
+        { question: "Who is the character that frequently uses the phrase \"That's what I do\"?", answer: "C.J. Cregg." },
+        { question: "What is the name of the episode that focuses on the campaign trail?", answer: "\"Election Night.\"" },
+        { question: "Which character has a close relationship with the President's wife?", answer: "C.J. Cregg." },
+        { question: "What key legislative issue does President Bartlet push for in his second term?", answer: "Universal healthcare." },
+        { question: "Who is the character known for his love of pop culture references?", answer: "Josh Lyman." },
+        { question: "What is the title of the episode that features the assassination of a fictional foreign leader?", answer: "\"Dead Irish Writers.\"" },
+        { question: "Which character often provides comic relief in the series?", answer: "Toby Ziegler." },
+        { question: "What is the main political issue addressed in the episode \"20 Hours in America\"?", answer: "Campaigning and the election process." },
+        { question: "Who is the character that has a brief romantic involvement with C.J. Cregg?", answer: "Danny Concannon." },
+        { question: "What is the occupation of Leo McGarry before becoming Chief of Staff?", answer: "Political consultant." },
+        { question: "Which character is known for their unwavering loyalty to President Bartlet?", answer: "Leo McGarry." },
+        { question: "What is the title of the episode where the staff prepares for a natural disaster?", answer: "\"Disaster Relief.\"" },
+        { question: "Who is the character that is a staunch advocate for environmental issues?", answer: "Sam Seaborn." },
+        { question: "What is the name of the political rival that runs against Matt Santos?", answer: "Arnold Vinick." },
+        { question: "Who plays Arnold Vinick?", answer: "Alan Alda." },
+        { question: "What is the central conflict in the episode \"Election Night\"?", answer: "The race between Santos and Vinick." },
+        { question: "Which character has a deep interest in science and technology?", answer: "Toby Ziegler." },
+        { question: "What event triggers a major crisis in the episode \"Game On\"?", answer: "A terrorist attack." },
+        { question: "What is the name of the character who serves as the Director of Communications?", answer: "Toby Ziegler." },
+        { question: "Who is the character that provides the President with personal advice?", answer: "Abbey Bartlet." },
+        { question: "What is the title of the episode that involves a major healthcare debate?", answer: "\"Election Night.\"" },
+        { question: "Which character often references his Catholic faith?", answer: "President Bartlet." },
+        { question: "What political position does Matt Santos ultimately achieve?", answer: "President of the United States." },
+        { question: "Who is the character that often clashes with the White House staff over policy decisions?", answer: "John Hoynes." },
+        { question: "What is the name of the episode that features the death of a significant character?", answer: "\"Two Cathedrals.\"" },
+        { question: "Which character frequently deals with the press and media?", answer: "C.J. Cregg." },
+        { question: "What major event occurs in the season 4 finale?", answer: "The Bartlet administration faces an election." },
+        { question: "Who is the character known for her relationship with Charlie Young?", answer: "Zoey Bartlet." },
+        { question: "What is the name of the character portrayed by Dule Hill?", answer: "Charlie Young." },
+        { question: "Which character often offers legal advice to the President?", answer: "Toby Ziegler." },
+        { question: "What is the title of the episode that addresses social issues like racism and inequality?", answer: "\"Shibboleth.\"" },
+        { question: "Who serves as the Deputy Communications Director?", answer: "Sam Seaborn." },
+        { question: "What is the name of the character who is a strong advocate for civil rights?", answer: "Josh Lyman." },
+        { question: "Which character has a storyline involving substance abuse?", answer: "Leo McGarry." },
+        { question: "What is the title of the episode that focuses on military intervention?", answer: "\"War Crimes.\"" },
+        { question: "Who often assists the President with personal matters?", answer: "Charlie Young." },
+        { question: "What is the name of the episode that involves a hostage crisis?", answer: "\"The Last Hurrah.\"" },
+        { question: "Which character is known for their quick wit and humor?", answer: "C.J. Cregg." },
+        { question: "What is the name of the episode that deals with education reform?", answer: "\"Election Night.\"" },
+        { question: "Who is the character that challenges Bartlet on several policy decisions?", answer: "Arnold Vinick." },
+        { question: "What is the title of the episode that highlights the impact of social media?", answer: "\"Election Night.\"" },
+        { question: "Which character often refers to his family and personal life in speeches?", answer: "President Bartlet." },
+        { question: "What significant legal case is discussed in the series?", answer: "Roe v. Wade." },
+        { question: "Who becomes the Chief of Staff after Leo McGarry?", answer: "Nancy McNally." },
+        { question: "What is the title of the episode that features a significant Supreme Court ruling?", answer: "\"Election Night.\"" },
+        { question: "Which character is known for their extensive knowledge of foreign policy?", answer: "Toby Ziegler." },
+        { question: "What major social issue is addressed in Season 5?", answer: "Same-sex marriage." },
+        { question: "Who serves as the White House’s liaison to Congress?", answer: "Josh Lyman." },
+        { question: "What is the title of the episode that focuses on environmental legislation?", answer: "\"Election Night.\"" }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function nextQuestion() {
+        const questionElement = document.getElementById("question");
+        const answerElement = document.getElementById("answer");
+        
+        if (currentQuestionIndex < quizData.length) {
+            questionElement.classList.remove("fadeIn");
+            answerElement.classList.remove("fadeIn");
+
+            setTimeout(() => {
+                questionElement.textContent = quizData[currentQuestionIndex].question;
+                answerElement.textContent = quizData[currentQuestionIndex].answer;
+
+                questionElement.classList.add("fadeIn");
+                answerElement.classList.add("fadeIn");
+            }, 500);
+
+            currentQuestionIndex++;
+        } else {
+            questionElement.textContent = "No more questions.";
+            answerElement.textContent = "";
+        }
+    }
+
+    // Initial question display
+    nextQuestion();
+</script>
+
+</body>
+</html>
