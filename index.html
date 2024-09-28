@@ -5,50 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE WEST WING</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif; /* Standard font */
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
-        }
-        #question, #answer {
-            margin: 10px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            border-radius: 5px;
-            width: 400px;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
             text-align: center;
-            transition: opacity 0.5s ease;
-            opacity: 0;
         }
-        .fadeIn {
-            opacity: 1;
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
         }
-        .fadeOut {
-            opacity: 0;
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
         }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
         #next-button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
             cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
         }
     </style>
 </head>
 <body>
 
-<h1>THE WEST WING</h1>
-<div id="question" class="fadeIn"></div>
-<div id="answer" class="fadeIn"></div>
-<button id="next-button" onclick="nextQuestion()">Next</button>
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>THE WEST WING</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
 
 <script>
+    // Question and answers data
     const quizData = [
         { question: "What is the name of the President in The West Wing?", answer: "Josiah Bartlet." },
         { question: "Who portrays President Bartlet?", answer: "Martin Sheen." },
@@ -148,36 +206,54 @@
         { question: "Which character is known for their extensive knowledge of foreign policy?", answer: "Toby Ziegler." },
         { question: "What major social issue is addressed in Season 5?", answer: "Same-sex marriage." },
         { question: "Who serves as the White House’s liaison to Congress?", answer: "Josh Lyman." },
-        { question: "What is the title of the episode that focuses on environmental legislation?", answer: "\"Election Night.\"" }
+        { question: "What is the title of the episode that focuses on environmental legislation?", answer: "\"Election Night.\"" },
+        { question: "What is the final message of The West Wing regarding politics?", answer: "The importance of idealism and hope in leadership." }
     ];
 
     let currentQuestionIndex = 0;
 
-    function nextQuestion() {
-        const questionElement = document.getElementById("question");
-        const answerElement = document.getElementById("answer");
-        
-        if (currentQuestionIndex < quizData.length) {
-            questionElement.classList.remove("fadeIn");
-            answerElement.classList.remove("fadeIn");
-
-            setTimeout(() => {
-                questionElement.textContent = quizData[currentQuestionIndex].question;
-                answerElement.textContent = quizData[currentQuestionIndex].answer;
-
-                questionElement.classList.add("fadeIn");
-                answerElement.classList.add("fadeIn");
-            }, 500);
-
-            currentQuestionIndex++;
-        } else {
-            questionElement.textContent = "No more questions.";
-            answerElement.textContent = "";
+    // Shuffle the quiz data
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
     }
 
-    // Initial question display
-    nextQuestion();
+    // Start the quiz
+    shuffle(quizData);
+    showQuestion();
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = quizData[currentQuestionIndex].question;
+        answerContainer.innerText = "Loading answer...";
+
+        // Fade in effect
+        answerContainer.classList.remove("fadeIn");
+        answerContainer.classList.add("fadeOut");
+
+        setTimeout(() => {
+            answerContainer.innerText = quizData[currentQuestionIndex].answer;
+            answerContainer.classList.remove("fadeOut");
+            answerContainer.classList.add("fadeIn");
+        }, 500);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            showQuestion();
+        } else {
+            const questionContainer = document.getElementById("question");
+            const answerContainer = document.getElementById("answer");
+            questionContainer.innerText = "Thank you for playing!";
+            answerContainer.innerText = "";
+            document.getElementById("next-button").style.display = "none"; // Hide the next button
+        }
+    }
 </script>
 
 </body>
